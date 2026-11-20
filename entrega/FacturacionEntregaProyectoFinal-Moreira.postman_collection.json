@@ -1,0 +1,94 @@
+{
+  "info": {
+    "_postman_id": "b4dd390e-bfe3-41b5-9c0e-0727e750df9e",
+    "name": "FacturacionEntregaProyectoFinal-Moreira",
+    "description": "Pruebas de clientes, productos y validaciones de creación de comprobantes.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080" }
+  ],
+  "item": [
+    {
+      "name": "Datos de referencia",
+      "item": [
+        {
+          "name": "Listar clientes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/clientes"
+          }
+        },
+        {
+          "name": "Listar productos y stock",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/productos"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Comprobantes",
+      "item": [
+        {
+          "name": "Crear comprobante válido",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Se creó el comprobante', function () { pm.response.to.have.status(201); });",
+                  "pm.test('La respuesta calcula fecha, total y cantidad', function () { var body = pm.response.json(); pm.expect(body.fecha).to.be.a('string'); pm.expect(body.total).to.exist; pm.expect(body.cantidadProductos).to.eql(1); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cliente\": { \"clienteid\": 1 },\n  \"lineas\": [\n    { \"cantidad\": 1, \"producto\": { \"productoid\": 1 } }\n  ]\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/api/comprobantes"
+          }
+        },
+        {
+          "name": "Rechazar cliente inexistente",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Responde con validación informada', function () { pm.response.to.have.status(400); pm.expect(pm.response.json().mensaje).to.include('cliente'); });"] } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\"cliente\":{\"clienteid\":999999},\"lineas\":[{\"cantidad\":1,\"producto\":{\"productoid\":1}}]}", "options": { "raw": { "language": "json" } } },
+            "url": "{{baseUrl}}/api/comprobantes"
+          }
+        },
+        {
+          "name": "Rechazar producto inexistente",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Responde con validación informada', function () { pm.response.to.have.status(400); pm.expect(pm.response.json().mensaje).to.include('producto'); });"] } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\"cliente\":{\"clienteid\":1},\"lineas\":[{\"cantidad\":1,\"producto\":{\"productoid\":999999}}]}", "options": { "raw": { "language": "json" } } },
+            "url": "{{baseUrl}}/api/comprobantes"
+          }
+        },
+        {
+          "name": "Rechazar cantidad mayor al stock",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Responde con validación informada', function () { pm.response.to.have.status(400); pm.expect(pm.response.json().mensaje).to.include('Stock insuficiente'); });"] } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\"cliente\":{\"clienteid\":1},\"lineas\":[{\"cantidad\":10000,\"producto\":{\"productoid\":1}}]}", "options": { "raw": { "language": "json" } } },
+            "url": "{{baseUrl}}/api/comprobantes"
+          }
+        }
+      ]
+    }
+  ]
+}
