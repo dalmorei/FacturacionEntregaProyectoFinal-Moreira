@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.facturacion</groupId>
-	<artifactId>FacturacionSegundaEntregaMoreira</artifactId>
+	<artifactId>FacturacionEntregaProyectoFinal-Moreira</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>FacturacionSegundaEntregaMoreira</name>
+	<name>FacturacionEntregaProyectoFinal-Moreira</name>
 	<description>API de facturación con Spring Boot y JPA</description>
 	<url/>
 	<licenses>
@@ -60,7 +60,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>FacturacionSegundaEntregaMoreira</finalName>
+		<finalName>FacturacionEntregaProyectoFinal-Moreira</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>

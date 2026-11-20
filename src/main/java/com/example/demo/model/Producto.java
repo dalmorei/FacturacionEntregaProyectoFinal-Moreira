@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Column;
 import java.math.BigDecimal;
 
 @Entity
@@ -17,7 +18,10 @@ public class Producto {
 
     private Long id;
     private String nombre;
+    @Column(nullable = false)
     private BigDecimal precio;
+    @Column(nullable = false)
+    private Integer stock = 0;
 
     public Producto() {
 
@@ -26,6 +30,12 @@ public class Producto {
     public Producto(String nombre, BigDecimal precio) {
         this.nombre = nombre;
         this.precio = precio;
+    }
+
+    public Producto(String nombre, BigDecimal precio, Integer stock) {
+        this.nombre = nombre;
+        this.precio = precio;
+        this.stock = stock;
     }
 
     public void setId(Long id){
@@ -50,6 +60,10 @@ public class Producto {
         this.precio = precio;
     }
 
+    public Integer getStock() { return stock; }
+
+    public void setStock(Integer stock) { this.stock = stock; }
+
 
     @Override
     public String toString(){
@@ -57,6 +71,7 @@ public class Producto {
                 "id: "+id+
                 "nombre: "+nombre+
                 "precio: "+precio+
+                ", stock: "+stock+
                 ")";
     }
 }
